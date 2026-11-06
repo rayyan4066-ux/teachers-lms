@@ -1,0 +1,2 @@
+import {requireAdmin} from '@/lib/auth';import AdminUsers from '@/components/AdminUsers';
+export default async function Page(){await requireAdmin();return <><p className="eyebrow">PLATFORM ADMINISTRATION</p><h1>Admin control center</h1><p className="muted">Manage users, approve teaching accounts and review all platform roles. This interface has privileged operations; the browser never receives service-role credentials.</p><AdminUsers/></>}

@@ -1,0 +1,7 @@
+'use client';import {useEffect,useState} from 'react';type User={id:string;full_name:string;email:string;role:string};
+export default function AdminUsers(){const [users,setUsers]=useState<User[]>([]),[error,setError]=useState(''),[busy,setBusy]=useState('');
+ async function refresh(){const r=await fetch('/api/admin/users');const d=await r.json();if(!r.ok)setError(d.error||'Unable to load users');else setUsers(d.users||[])}
+ useEffect(()=>{refresh()},[]);
+ async function setRole(id:string,role:string){setBusy(id);setError('');const r=await fetch('/api/admin/users',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:id,role})});const d=await r.json();if(!r.ok)setError(d.error||'Role change failed');else await refresh();setBusy('')}
+ return <section className="panel"><h2>Users and access levels</h2><p className="muted">Only platform admins can approve teachers or change roles. Changes are audited.</p>{error&&<p role="alert" className="notice">{error}</p>}<div className="table-scroll"><table className="data-table"><thead><tr><th>Person</th><th>Current role</th><th>Change role</th></tr></thead><tbody>{users.map(u=><tr key={u.id}><td><strong>{u.full_name}</strong><small>{u.email}</small></td><td><span className="tag">{u.role}</span></td><td><select className="control" disabled={busy===u.id} value={u.role} onChange={e=>setRole(u.id,e.target.value)}><option value="student">Student</option><option value="teacher">Teacher</option><option value="admin">Admin</option></select></td></tr>)}</tbody></table></div></section>
+}

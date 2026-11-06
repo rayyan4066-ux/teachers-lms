@@ -1,0 +1,2 @@
+import {requireStaff} from '@/lib/auth';import {body,str,failure} from '@/lib/validations';
+export async function POST(req:Request){try{const {db,profile}=await requireStaff();const data=await body(req);const title=str(data.title,3,120),description=str(data.description||'',0,1000);const {data:course,error}=await db.from('courses').insert({title,description,teacher_id:profile.id,status:'published'}).select('id,title').single();if(error)throw error;return Response.json({course},{status:201})}catch(e){return failure(e)}}
