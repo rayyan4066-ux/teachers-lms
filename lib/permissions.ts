@@ -18,5 +18,5 @@ export async function ownsCourse(db:Awaited<ReturnType<typeof createClient>>,id:
 export function apiError(e:unknown){
  const msg=e instanceof Error?e.message:'Unexpected error';
  const status=msg==='UNAUTHORIZED'?401:msg==='FORBIDDEN'?403:msg==='NOT_FOUND'?404:400;
- return Response.json({error:status===400?'Invalid request':msg},{status});
+ return Response.json({error:msg || 'Invalid request'},{status});
 }
